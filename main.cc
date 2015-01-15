@@ -1,10 +1,10 @@
 #include <GPIO.hh>
 
-#include <chrono>
-#include <fstream>
+// STL
 #include <iostream>
-#include <thread>
-#include <unistd.h>
+#include <chrono>
+
+#include <unistd.h> // usleep()
 
 using namespace std;
 using namespace std::chrono;
