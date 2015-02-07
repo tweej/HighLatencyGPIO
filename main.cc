@@ -56,10 +56,10 @@ int main()
 
    {
       // Short GPIO 15 (input) to GPIO 60 (output) for the following latency test
-      GPIO gpio1(60, GPIO::OUT);
-      GPIO gpio2(15, GPIO::RISING, handleisr); // will be destroyed first,
-                                               // so no spurious call to handleisr upon
-                                               // destruction of GPIO60
+      GPIO gpio1(60, GPIO::Direction::OUT);
+      GPIO gpio2(15, GPIO::Edge::RISING, handleisr); // will be destroyed first,
+                                                     // so no spurious call to handleisr upon
+                                                     // destruction of GPIO60
 
 
       usleep(125000);
@@ -68,10 +68,10 @@ int main()
       for(unsigned int i=0;i<nIterations;++i)
       {
          beg = high_resolution_clock::now();
-         gpio1.setValue(GPIO::HIGH);
+         gpio1.setValue(GPIO::Value::HIGH);
          usleep(31250);
 
-         gpio1.setValue(GPIO::LOW);
+         gpio1.setValue(GPIO::Value::LOW);
          usleep(31250);
       }
 

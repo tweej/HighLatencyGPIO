@@ -45,7 +45,7 @@ const std::string GPIO::_sysfsPath("/sys/class/gpio/");
 GPIO::GPIO(unsigned short id, Direction direction) :
    _id(id), _id_str(std::to_string(id)),
    _direction(direction),
-   _edge(GPIO::NONE),
+   _edge(GPIO::Edge::NONE),
    _isr(std::function<void(Value)>()), // default constructor constructs empty function object
    _pollThread(std::thread()),         // default constructor constructs non-joinable
    _pollFD(-1),
@@ -59,7 +59,7 @@ GPIO::GPIO(unsigned short id, Direction direction) :
 
 GPIO::GPIO(unsigned short id, Edge edge, std::function<void(Value)> isr):
    _id(id), _id_str(std::to_string(id)),
-   _direction(GPIO::IN),
+   _direction(GPIO::Direction::IN),
    _edge(edge),
    _isr(isr),
    _pollThread(std::thread()), // default constructor constructs non-joinable
@@ -78,10 +78,10 @@ GPIO::GPIO(unsigned short id, Edge edge, std::function<void(Value)> isr):
             "Unable to set edge for GPIO " + _id_str + "." +
             "Are you sure this GPIO can be configured for interrupts?");
       }
-      if     ( _edge == GPIO::NONE )    sysfs_edge << "none";
-      else if( _edge == GPIO::RISING )  sysfs_edge << "rising";
-      else if( _edge == GPIO::FALLING ) sysfs_edge << "falling";
-      else if( _edge == GPIO::BOTH )    sysfs_edge << "both";
+      if     ( _edge == GPIO::Edge::NONE )    sysfs_edge << "none";
+      else if( _edge == GPIO::Edge::RISING )  sysfs_edge << "rising";
+      else if( _edge == GPIO::Edge::FALLING ) sysfs_edge << "falling";
+      else if( _edge == GPIO::Edge::BOTH )    sysfs_edge << "both";
       sysfs_edge.close();
    }
 
@@ -188,8 +188,8 @@ void GPIO::initCommon() const
       {
          throw std::runtime_error("Unable to set direction for GPIO " + _id_str);
       }
-      if( _direction == GPIO::IN )		    sysfs_direction << "in";
-      else if( _direction == GPIO::OUT )  	sysfs_direction << "out";
+      if( _direction == GPIO::Direction::IN )        sysfs_direction << "in";
+      else if( _direction == GPIO::Direction::OUT )  sysfs_direction << "out";
       sysfs_direction.close();
    }
 
@@ -210,7 +210,7 @@ void GPIO::initCommon() const
 
    //if output, set value to inactive
    {
-      if( _direction == GPIO::OUT )
+      if( _direction == GPIO::Direction::OUT )
       {
          std::ofstream sysfs_value(_sysfsPath + "gpio" + _id_str + "/value", std::ofstream::app);
          if( !sysfs_value.is_open() )
@@ -308,8 +308,8 @@ void GPIO::pollLoop()
 
 
             Value val;
-            if     ( buf[0] == '0' )   val = GPIO::LOW;
-            else if( buf[0] == '1' )   val = GPIO::HIGH;
+            if     ( buf[0] == '0' )  val = GPIO::Value::LOW;
+            else if( buf[0] == '1' )  val = GPIO::Value::HIGH;
             else throw std::runtime_error("Invalid value read from GPIO " + _id_str + ": " + buf[0]);
 
    #ifdef LOCKFREE
@@ -436,7 +436,7 @@ GPIO::~GPIO()
 
 void GPIO::setValue(const Value value) const
 {
-   if( _direction == GPIO::IN )
+   if( _direction == GPIO::Direction::IN )
    {
       throw std::runtime_error("Cannot set value on an input GPIO");
    }
@@ -447,8 +447,8 @@ void GPIO::setValue(const Value value) const
       throw std::runtime_error("Unable to set value for GPIO " + _id_str);
    }
 
-   if     ( value == GPIO::HIGH )  sysfs_value << "1";
-   else if( value == GPIO::LOW )   sysfs_value << "0";
+   if     ( value == GPIO::Value::HIGH )  sysfs_value << "1";
+   else if( value == GPIO::Value::LOW )   sysfs_value << "0";
    sysfs_value.close();
 }
 
@@ -468,8 +468,8 @@ GPIO::Value GPIO::getValue() const
    }
 
    Value val;
-   if     ( value == '0' ) val = GPIO::LOW;
-   else if( value == '1' ) val = GPIO::HIGH;
+   if     ( value == '0' )  val = GPIO::Value::LOW;
+   else if( value == '1' )  val = GPIO::Value::HIGH;
    else throw std::runtime_error("Invalid value read from GPIO " + _id_str + ": " + value);
 
    return(val);
