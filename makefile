@@ -1,6 +1,6 @@
 CC=g++
-CFLAGS=-c -Wall -I. -std=c++0x -O2
-LDFLAGS=-Wall -I. -std=c++0x -O2
+CFLAGS=-c -Wall -std=c++0x -O2
+LDFLAGS=-Wall -std=c++0x -O2
 LIBS= \
    -lboost_system \
    -lboost_filesystem \

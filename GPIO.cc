@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <GPIO.hh>
+#include "GPIO.hh"
 
 #include <fstream>
 #include <stdexcept>

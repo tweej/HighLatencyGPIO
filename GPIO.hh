@@ -25,7 +25,7 @@ SOFTWARE.
 #ifndef GPIO_HH
 #define GPIO_HH
 
-#include <Uncopyable.hh>
+#include "Uncopyable.hh"
 
 #include <atomic>
 #include <functional>
