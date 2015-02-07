@@ -29,4 +29,4 @@ $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(CFLAGS) $< -o $@
 
 clean:
-        rm -f GPIO
+	rm -f GPIO
