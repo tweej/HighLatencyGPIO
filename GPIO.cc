@@ -27,6 +27,7 @@ SOFTWARE.
 #include <fstream>
 #include <stdexcept>
 
+#include <boost/exception/diagnostic_information.hpp>
 #include <boost/filesystem.hpp>
 
 #include <sys/fcntl.h>
@@ -276,7 +277,8 @@ void GPIO::pollLoop()
          //  return < 0 (which could not be recovered from)
          // I suspect these cases are extraordinarily rare, and do not currently consider them to be
          // worth the amount of code necessary to gracefully recover, or the possibility of
-         // introducing bugs in that code. I'm willing to be wrong; just contact me if you see the
+         // introducing bugs in that code. No occurrences have been observed in over 1 year of
+         // continuous operation, but I'm still willing to be wrong; just contact me if you see the
          // error below, want to make the argument that the code is necessary, or can provide said
          // code. :) This also applies to the read() in the loop below.
          if( nbytes < 0 ) perror("read1");
@@ -299,7 +301,6 @@ void GPIO::pollLoop()
             const ssize_t nbytes = read(fdset[0].fd, buf, MAX_BUF);
             if( nbytes != MAX_BUF ) // See comment above
             {
-
                if( nbytes < 0 )
                   perror("read2");
 
@@ -430,6 +431,7 @@ GPIO::~GPIO()
    catch(...)
    {
       cerr << "Exception caught in destructor for GPIO " << _id_str << endl;
+      cerr << boost::current_exception_diagnostic_information() << endl;
    }
 }
 

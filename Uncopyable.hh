@@ -1,9 +1,11 @@
 class Uncopyable
 {
 protected:
-   Uncopyable() {}
-   ~Uncopyable() {}
+   Uncopyable()  = default;
+   ~Uncopyable() = default;
 private:
-   Uncopyable(const Uncopyable&);
-   Uncopyable& operator=(const Uncopyable&);
+   Uncopyable(const Uncopyable&)            = delete;
+   Uncopyable& operator=(const Uncopyable&) = delete;
+   Uncopyable(Uncopyable&&)                 = delete;
+   Uncopyable& operator=(Uncopyable&&)      = delete;
 };

@@ -6,12 +6,11 @@
 
 #include <unistd.h> // usleep()
 
-using namespace std;
 using namespace std::chrono;
 
 
 
-std::chrono::high_resolution_clock::time_point beg;
+high_resolution_clock::time_point beg;
 duration<double, std::micro> accum;
 
 
@@ -24,7 +23,7 @@ public:
 
       const auto time_span = end - beg;
       accum += time_span;
-      cout << "Latency: " << time_span.count() << " microseconds" << endl;
+      std::cout << "Latency: " << time_span.count() << " microseconds" << std::endl;
    }
 };
 
@@ -35,7 +34,7 @@ void myisr(GPIO::Value val)
 
    const auto time_span = end - beg;
    accum += time_span;
-   cout << "Latency: " << time_span.count() << " microseconds" << endl;
+   std::cout << "Latency: " << time_span.count() << " microseconds" << std::endl;
 }
 
 
@@ -61,7 +60,6 @@ int main()
                                                      // so no spurious call to handleisr upon
                                                      // destruction of GPIO60
 
-
       usleep(125000);
 
       const unsigned int nIterations = 50;
@@ -75,6 +73,6 @@ int main()
          usleep(31250);
       }
 
-      cout << "Average: " << accum.count()/nIterations << " microseconds " << endl;
+      std::cout << "Average: " << accum.count()/nIterations << " microseconds " << std::endl;
    }
 }

@@ -86,7 +86,7 @@ public:
    ///
    /// @brief Construt an input or output GPIO object.
    ///
-   /// @param[in]   id         The GPIO ID. Often referred to a "pin number".
+   /// @param[in]   id         The GPIO ID. Often referred to as "pin number".
    /// @param[in]   direction  The type (INPUT or OUTPUT) of GPIO to construct.
    ///
    //-----------------------------------------------------------------------------------------------
@@ -102,11 +102,12 @@ public:
    ///        transition of type edge occurs.
    ///
    ///
-   /// @param[in]   id    The GPIO ID. Often referred to a "pin number".
+   /// @param[in]   id    The GPIO ID. Often referred to as "pin number".
    /// @param[in]   edge  The type (INPUT or OUTPUT) of GPIO to construct.
    /// @param[in]   isr   The function to call when transitions of type edge occur.
    ///
    /// @note If function isr throws an exception, IT WILL NOT BE HANDLED OR IGNORED BY THIS CLASS.
+   ///       Therefore, it is recommended to make this function noexcept.
    ///
    //-----------------------------------------------------------------------------------------------
    explicit GPIO(
