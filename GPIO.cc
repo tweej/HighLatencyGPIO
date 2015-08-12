@@ -291,6 +291,8 @@ void GPIO::pollLoop()
 
    while(1)
    {
+      if( _destructing ) return;
+
       const int rc = poll(fdset, 2, -1);
       if( rc == 1 )
       {
@@ -405,8 +407,8 @@ GPIO::~GPIO()
    close(_pipeFD[0]);
    close(_pipeFD[1]);
 
-   if( _isrThread.joinable())   _isrThread.join();
-   if( _pollThread.joinable())  _pollThread.join();
+   if( _isrThread.joinable() )   _isrThread.join();
+   if( _pollThread.joinable() )  _pollThread.join();
 
    // Do not close the file descriptor for the sysfs value file until _pollThread() has joined.
    // This prevents reuse of this file descriptor by the kernel for other threads in this
