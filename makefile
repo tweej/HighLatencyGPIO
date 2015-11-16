@@ -1,32 +1,33 @@
+MAKEFLAGS += -j2
+
 CC=g++
-CFLAGS=-c -Wall -std=c++11 -O2
-LDFLAGS=-Wall -std=c++11 -O2
+CXXFLAGS=-c -Wall -std=c++11 -O2 -flto
+LDFLAGS=    -Wall -std=c++11 -O2 -flto
 LIBS= \
    -lboost_system \
    -lboost_filesystem \
    -lpthread
 SOURCES=main.cc GPIO.cc
-OBJECTS=$(SOURCES:.cpp=.o)
+OBJECTS=$(SOURCES:.cc=.o)
 EXECUTABLE=GPIO
-.PHONY: lockfree
 
 ARCH := $(shell uname -m)
 ifeq ($(ARCH), armv7l)
-   CFLAGS += -march=armv7-a -mtune=cortex-a8 -mfloat-abi=hard -mfpu=neon
-   LDFLAGS += -march=armv7-a -mtune=cortex-a8 -mfloat-abi=hard -mfpu=neon
+   CXXFLAGS += -march=armv7-a -mtune=cortex-a8 -mfloat-abi=hard -mfpu=neon
+   LDFLAGS  += -march=armv7-a -mtune=cortex-a8 -mfloat-abi=hard -mfpu=neon
 endif
 
+lockfree : CXXFLAGS += -DLOCKFREE
 
 all: $(SOURCES) $(EXECUTABLE)
 
-lockfree: $(SOURCES) $(OBJECTS)
-	$(CC) $(LDFLAGS) -DLOCKFREE $(OBJECTS) -o $(EXECUTABLE) $(LIBS) -lboost_atomic
+lockfree: $(SOURCES) $(EXECUTABLE) 
 
 $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(LDFLAGS) $(OBJECTS) -o $@ $(LIBS)
 
-.cpp.o:
-	$(CC) $(CFLAGS) $< -o $@
+.cc.o:
+	$(CC) $(CXXFLAGS) $< -o $@
 
 clean:
-	rm -f GPIO
+	rm -f GPIO *.o

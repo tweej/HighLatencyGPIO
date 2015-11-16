@@ -289,10 +289,8 @@ void GPIO::pollLoop()
 
 
 
-   while(1)
+   while( !_destructing )
    {
-      if( _destructing ) return;
-
       const int rc = poll(fdset, 2, -1);
       if( rc == 1 )
       {
