@@ -54,11 +54,11 @@ int main()
       std::bind(&Handler::handle, &h, std::placeholders::_1);
 
    {
-      // Short GPIO 15 (input) to GPIO 60 (output) for the following latency test
-      GPIO gpio1(60, GPIO::Direction::OUT);
+      // Short GPIO 15 (input) to GPIO 27 (output) for the following latency test
+      GPIO gpio1(27, GPIO::Direction::OUT);
       GPIO gpio2(15, GPIO::Edge::RISING, handleisr); // will be destroyed first,
                                                      // so no spurious call to handleisr upon
-                                                     // destruction of GPIO60
+                                                     // destruction of GPIO 27
 
       usleep(125000);
 
