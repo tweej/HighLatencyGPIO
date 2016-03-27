@@ -21,7 +21,7 @@ public:
    {
       const high_resolution_clock::time_point end = high_resolution_clock::now();
 
-      const auto time_span = end - beg;
+      const auto time_span = duration_cast<microseconds>(end - beg);
       accum += time_span;
       std::cout << "Latency: " << time_span.count() << " microseconds" << std::endl;
    }
